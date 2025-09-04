@@ -20,10 +20,10 @@ public class MedicalAppointment {
     private String observation;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "patient_id")
     private User patient;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "doctor_id")
     private User doctor;
 }

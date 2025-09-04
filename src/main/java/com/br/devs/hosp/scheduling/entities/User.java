@@ -2,7 +2,6 @@ package com.br.devs.hosp.scheduling.entities;
 
 import com.br.devs.hosp.scheduling.entities.enums.UserType;
 
-import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -13,7 +12,4 @@ public class User {
     private String mail;
     private UserType userType;
     private String expertise;
-
-    @OneToMany(mappedBy = "id", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MedicalAppointment> appointments;
 }
