@@ -22,7 +22,10 @@ public class User {
     private String name;
 
     @Column
-    private String mail;
+    private String login;
+
+    @Column
+    private String password;
 
     @Enumerated(EnumType.STRING)
     @Column
