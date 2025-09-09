@@ -26,7 +26,7 @@ public class UserGraphQLController {
     }
 
     @QueryMapping
-    public User getUserById(@Argument("userId") String userId) {
+    public User getUserById(@Argument String userId) {
         return userService.getUserById(userId);
     }
 
@@ -36,12 +36,12 @@ public class UserGraphQLController {
     }
 
     @MutationMapping
-    public User updateUser(@Argument String userId, @RequestBody UserDTO userDTO) {
+    public User updateUser(@Argument String userId, @Argument UserDTO userDTO) {
         return userService.updateUser(userId, userDTO);
     }
 
     @MutationMapping
-    public void deleteUser(@Argument("userId") String userId) {
+    public void deleteUser(@Argument String userId) {
         userService.deleteUser(userId);
     }
 }

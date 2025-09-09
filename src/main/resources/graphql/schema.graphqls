@@ -37,4 +37,6 @@ type Mutation {
     updateUser(userId: ID!, input: UserInput!): User!
     deleteUser(userId: ID!): Boolean!
     createAppointment(input: AppointmentInput!): Appointment!
+    updateAppointment(appointmentId: ID!, input: AppointmentInput!): Appointment!
+    deleteAppointment(appointmentId: ID!): Boolean!
 }

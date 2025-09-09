@@ -42,7 +42,7 @@ public class AppointmentController {
 
     @DeleteMapping("/{appointmentId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteUser(@PathVariable("appointmentId") String appointmentId) {
+    public void deleteAppointment(@PathVariable("appointmentId") String appointmentId) {
         appointmentService.deleteAppointment(appointmentId);
     }
 }
