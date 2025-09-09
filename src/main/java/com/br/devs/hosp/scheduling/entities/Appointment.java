@@ -1,22 +1,35 @@
 package com.br.devs.hosp.scheduling.entities;
 
 import com.br.devs.hosp.scheduling.entities.enums.AppointmentStatus;
+import jakarta.persistence.*;
+import lombok.Data;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.sql.Time;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
+@Data
 @Entity
-@Table(name = "medical_appointment")
-public class MedicalAppointment {
-    private UUID id;
+@Table(name = "`appointment`")
+public class Appointment {
 
+    @Id
+    @GeneratedValue
+    @UuidGenerator
+    @Column(name = "id", columnDefinition = "varchar(36)")
+    private String id;
+
+    @Column(name = "date_appointment")
     private LocalDateTime dateTimeAppointment;
 
+    @Column
     private Time duration;
 
+    @Column
+    @Enumerated(EnumType.STRING)
     private AppointmentStatus status;
 
+    @Column
     private String observation;
 
     @ManyToOne

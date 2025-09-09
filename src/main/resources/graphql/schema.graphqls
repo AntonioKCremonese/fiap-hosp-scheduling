@@ -1,0 +1,40 @@
+type Appointment {
+    id: ID!
+    dateTimeAppointment: String!
+    duration: String!
+    status: String!
+    observation: String
+    patient: User!
+    doctor: User!
+}
+
+type User {
+    id: ID!
+    name: String!
+    mail: String!
+    expertise: String
+    userType: String!
+}
+
+input AppointmentInput {
+    appointmentDate: String!
+    duration: String!
+    status: String!
+    observation: String
+    patientId: ID!
+    doctorId: ID!
+}
+
+type Query {
+    getUsers: [User]!
+    getUserById(userId: ID!): User!
+    appointments: [Appointment]!
+    appointmentsByUserId(userId: ID!): [Appointment]!
+}
+
+type Mutation {
+    createUser(input: UserInput!): User!
+    updateUser(userId: ID!, input: UserInput!): User!
+    deleteUser(userId: ID!): Boolean!
+    createAppointment(input: AppointmentInput!): Appointment!
+}
