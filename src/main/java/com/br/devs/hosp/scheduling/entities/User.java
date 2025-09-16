@@ -1,11 +1,15 @@
 package com.br.devs.hosp.scheduling.entities;
 
 import com.br.devs.hosp.scheduling.entities.enums.UserType;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Data;
 import org.hibernate.annotations.UuidGenerator;
-
-import java.util.UUID;
 
 @Data
 @Entity
@@ -20,6 +24,9 @@ public class User {
 
     @Column
     private String name;
+
+    @Column(name = "email")
+    private String email;
 
     @Column
     private String login;

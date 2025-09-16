@@ -1,4 +1,4 @@
-package com.br.devs.hosp.scheduling.controller.dto;
+package com.br.devs.hosp.scheduling.controller.dto.input;
 
 import com.br.devs.hosp.scheduling.entities.enums.AppointmentStatus;
 

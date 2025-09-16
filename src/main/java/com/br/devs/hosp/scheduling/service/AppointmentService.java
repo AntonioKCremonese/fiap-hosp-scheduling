@@ -1,6 +1,6 @@
 package com.br.devs.hosp.scheduling.service;
 
-import com.br.devs.hosp.scheduling.controller.dto.AppointmentDTO;
+import com.br.devs.hosp.scheduling.controller.dto.input.AppointmentDTO;
 import com.br.devs.hosp.scheduling.entities.Appointment;
 import com.br.devs.hosp.scheduling.entities.enums.UserType;
 import com.br.devs.hosp.scheduling.repository.AppointmentRepository;
@@ -38,8 +38,8 @@ public class AppointmentService {
     }
 
     public Appointment createAppointment(AppointmentDTO appointment) {
-        var patient = userService.getUserById(appointment.patientId());
-        var doctor = userService.getUserById(appointment.doctorId());
+        var patient = userService.findUserById(appointment.patientId());
+        var doctor = userService.findUserById(appointment.doctorId());
 
         Appointment newAppointment = new Appointment();
         newAppointment.setDateTimeAppointment(LocalDateTime.parse(appointment.appointmentDate()));
