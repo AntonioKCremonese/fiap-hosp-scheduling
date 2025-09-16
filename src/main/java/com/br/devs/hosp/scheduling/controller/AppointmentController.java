@@ -1,6 +1,6 @@
 package com.br.devs.hosp.scheduling.controller;
 
-import com.br.devs.hosp.scheduling.controller.dto.AppointmentDTO;
+import com.br.devs.hosp.scheduling.controller.dto.input.AppointmentDTO;
 import com.br.devs.hosp.scheduling.entities.Appointment;
 import com.br.devs.hosp.scheduling.service.AppointmentService;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;

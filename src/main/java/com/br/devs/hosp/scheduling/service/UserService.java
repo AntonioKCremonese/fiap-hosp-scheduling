@@ -1,48 +1,62 @@
 package com.br.devs.hosp.scheduling.service;
 
-import com.br.devs.hosp.scheduling.controller.dto.UserDTO;
+import com.br.devs.hosp.scheduling.controller.dto.input.UserCreateDTO;
+import com.br.devs.hosp.scheduling.controller.dto.input.UserUpdateDTO;
+import com.br.devs.hosp.scheduling.controller.dto.output.UserOutputDTO;
 import com.br.devs.hosp.scheduling.entities.User;
+import com.br.devs.hosp.scheduling.mapper.UserMapper;
 import com.br.devs.hosp.scheduling.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public UserService(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.userMapper = userMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    public User getUserById(String userId) {
-        return userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
+    @Transactional(readOnly = true)
+    public Page<UserOutputDTO> getAllUsers(Pageable pageable) {
+        Page<User> users = userRepository.findAll(pageable);
+        return users.map(userMapper::toDto);
     }
 
-    public User createUser(UserDTO userDTO) {
-        User user = new User();
-        user.setName(userDTO.name());
-        user.setMail(userDTO.mail());
-        user.setUserType(userDTO.userType());
-        user.setExpertise(userDTO.expertise());
-        return userRepository.save(user);
+    @Transactional(readOnly = true)
+    public UserOutputDTO getUserById(String userId) {
+        return userMapper.toDto(findUserById(userId));
     }
 
-    public User updateUser(String userId, UserDTO userDTO) {
-        User user = getUserById(userId);
-        user.setName(userDTO.name());
-        user.setMail(userDTO.mail());
-        user.setUserType(userDTO.userType());
-        user.setExpertise(userDTO.expertise());
-        return userRepository.save(user);
+    @Transactional
+    public UserOutputDTO createUser(UserCreateDTO userDTO) {
+        User user = userMapper.toEntity(userDTO);
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        return userMapper.toDto(userRepository.save(user));
     }
 
+    @Transactional
+    public UserOutputDTO updateUser(String userId, UserUpdateDTO userDTO) {
+        User user = findUserById(userId);
+        userMapper.copyProperties(userDTO, user);
+        return userMapper.toDto(userRepository.save(user));
+    }
+
+    @Transactional
     public void deleteUser(String userId) {
-        User user = getUserById(userId);
-        userRepository.delete(user);
+        userRepository.delete(findUserById(userId));
+    }
+
+    protected User findUserById(String userId) {
+        return userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
     }
 }

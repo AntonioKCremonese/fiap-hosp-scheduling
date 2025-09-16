@@ -1,42 +1,44 @@
 package com.br.devs.hosp.scheduling.controller.graphql;
 
-import com.br.devs.hosp.scheduling.controller.dto.UserDTO;
-import com.br.devs.hosp.scheduling.entities.User;
+import com.br.devs.hosp.scheduling.controller.dto.input.UserCreateDTO;
+import com.br.devs.hosp.scheduling.controller.dto.input.UserUpdateDTO;
+import com.br.devs.hosp.scheduling.controller.dto.output.UserOutputDTO;
 import com.br.devs.hosp.scheduling.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @Controller
 public class UserGraphQLController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @QueryMapping
-    public List<User> getUsers() {
-        return userService.getAllUsers();
+    public UserGraphQLController(UserService userService) {
+        this.userService = userService;
     }
 
     @QueryMapping
-    public User getUserById(@Argument String userId) {
+    public Page<UserOutputDTO> getUsers(Pageable pageable) {
+        return userService.getAllUsers(pageable);
+    }
+
+    @QueryMapping
+    public UserOutputDTO getUserById(@Argument String userId) {
         return userService.getUserById(userId);
     }
 
     @MutationMapping
-    public User createUser(@Argument UserDTO userDTO) {
+    public UserOutputDTO createUser(@Argument UserCreateDTO userDTO) {
         return userService.createUser(userDTO);
     }
 
     @MutationMapping
-    public User updateUser(@Argument String userId, @Argument UserDTO userDTO) {
+    public UserOutputDTO updateUser(@Argument String userId, @Argument UserUpdateDTO userDTO) {
         return userService.updateUser(userId, userDTO);
     }
 
