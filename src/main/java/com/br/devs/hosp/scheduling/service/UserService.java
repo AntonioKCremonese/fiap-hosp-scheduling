@@ -6,7 +6,6 @@ import com.br.devs.hosp.scheduling.controller.dto.output.UserOutputDTO;
 import com.br.devs.hosp.scheduling.entities.User;
 import com.br.devs.hosp.scheduling.mapper.UserMapper;
 import com.br.devs.hosp.scheduling.repository.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -57,6 +56,6 @@ public class UserService {
     }
 
     protected User findUserById(String userId) {
-        return userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
+        return userRepository.findById(userId).orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
     }
 }

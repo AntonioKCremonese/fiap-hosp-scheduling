@@ -4,6 +4,7 @@ import com.br.devs.hosp.scheduling.controller.dto.input.UserCreateDTO;
 import com.br.devs.hosp.scheduling.controller.dto.input.UserUpdateDTO;
 import com.br.devs.hosp.scheduling.controller.dto.output.UserOutputDTO;
 import com.br.devs.hosp.scheduling.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -47,12 +48,12 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<UserOutputDTO> createUser(@RequestBody UserCreateDTO userDTO) {
+    public ResponseEntity<UserOutputDTO> createUser(@RequestBody @Valid UserCreateDTO userDTO) {
         return ResponseEntity.ok(userService.createUser(userDTO));
     }
 
     @PutMapping("/{userId}")
-    public ResponseEntity<UserOutputDTO> updateUser(@PathVariable("userId") String userId, @RequestBody UserUpdateDTO userDTO) {
+    public ResponseEntity<UserOutputDTO> updateUser(@PathVariable("userId") String userId, @RequestBody @Valid UserUpdateDTO userDTO) {
         return ResponseEntity.ok(userService.updateUser(userId, userDTO));
     }
 
