@@ -1,8 +1,11 @@
 package com.br.devs.hosp.scheduling.controller.graphql;
 
-import com.br.devs.hosp.scheduling.controller.dto.input.AppointmentDTO;
+import com.br.devs.hosp.scheduling.controller.dto.input.AppointmentInputDTO;
+import com.br.devs.hosp.scheduling.controller.dto.output.AppointmentOutputDTO;
 import com.br.devs.hosp.scheduling.entities.Appointment;
 import com.br.devs.hosp.scheduling.service.AppointmentService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
@@ -20,8 +23,8 @@ public class AppointmentGraphQLController {
     }
 
     @QueryMapping
-    public List<Appointment> getAppointments() {
-        return appointmentService.getAllAppointments();
+    public Page<AppointmentOutputDTO> getAppointments(Pageable pageable) {
+        return appointmentService.getAllAppointments(pageable);
     }
 
     @QueryMapping
@@ -30,12 +33,12 @@ public class AppointmentGraphQLController {
     }
 
     @MutationMapping
-    public Appointment createAppointment(@Argument AppointmentDTO appointment) {
+    public AppointmentOutputDTO createAppointment(@Argument AppointmentInputDTO appointment) {
         return appointmentService.createAppointment(appointment);
     }
 
     @MutationMapping
-    public Appointment updateAppointment(@Argument String appointmentId, @Argument AppointmentDTO appointment) {
+    public AppointmentOutputDTO updateAppointment(@Argument String appointmentId, @Argument AppointmentInputDTO appointment) {
         return appointmentService.updateAppointment(appointmentId, appointment);
     }
 
