@@ -5,7 +5,6 @@ import com.br.devs.hosp.scheduling.controller.dto.output.AppointmentOutputDTO;
 import com.br.devs.hosp.scheduling.entities.Appointment;
 import com.br.devs.hosp.scheduling.service.AppointmentService;
 import jakarta.validation.Valid;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -31,11 +30,9 @@ import java.util.List;
 public class AppointmentController {
 
     private final AppointmentService appointmentService;
-    private final RabbitTemplate rabbitTemplate;
 
-    public AppointmentController(AppointmentService appointmentService, RabbitTemplate rabbitTemplate) {
+    public AppointmentController(AppointmentService appointmentService) {
         this.appointmentService = appointmentService;
-        this.rabbitTemplate = rabbitTemplate;
     }
 
     @GetMapping
@@ -56,17 +53,13 @@ public class AppointmentController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public AppointmentOutputDTO createAppointment(@RequestBody @Valid AppointmentInputDTO appointment) {
-        var appointmentCreated = appointmentService.createAppointment(appointment);
-        rabbitTemplate.convertAndSend("appointmentsQueue", appointmentCreated);
-        return appointmentCreated;
+        return appointmentService.createAppointment(appointment);
     }
 
     @PreAuthorize("hasAnyRole('DOCTOR', 'NURSE')")
     @PutMapping("/{appointmentId}")
     public AppointmentOutputDTO updateAppointment(@PathVariable("appointmentId") String appointmentId, @RequestBody @Valid AppointmentInputDTO appointment) {
-        var appointmentUpdated = appointmentService.updateAppointment(appointmentId, appointment);
-        rabbitTemplate.convertAndSend("appointmentsQueue", appointmentUpdated);
-        return appointmentUpdated;
+        return appointmentService.updateAppointment(appointmentId, appointment);
     }
 
     @PreAuthorize("hasAnyRole('DOCTOR', 'NURSE')")
