@@ -1,9 +1,10 @@
 package com.br.devs.hosp.scheduling.controller;
 
-import com.br.devs.hosp.scheduling.controller.dto.input.AppointmentDTO;
+import com.br.devs.hosp.scheduling.controller.dto.input.AppointmentInputDTO;
+import com.br.devs.hosp.scheduling.controller.dto.output.AppointmentOutputDTO;
 import com.br.devs.hosp.scheduling.entities.Appointment;
 import com.br.devs.hosp.scheduling.service.AppointmentService;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,11 +17,9 @@ import java.util.List;
 public class AppointmentController {
 
     private final AppointmentService appointmentService;
-    private final RabbitTemplate rabbitTemplate;
 
-    public AppointmentController(AppointmentService appointmentService, RabbitTemplate rabbitTemplate) {
+    public AppointmentController(AppointmentService appointmentService) {
         this.appointmentService = appointmentService;
-        this.rabbitTemplate = rabbitTemplate;
     }
 
     @GetMapping
@@ -33,25 +32,21 @@ public class AppointmentController {
         return ResponseEntity.ok(appointmentService.getAppointmentsByUserId(userId));
     }
 
+    @PreAuthorize("hasAnyRole('DOCTOR', 'NURSE')")
     @PostMapping
-    @PreAuthorize("hasAnyRole('DOCTOR', 'NURSE')")
     @ResponseStatus(HttpStatus.CREATED)
-    public Appointment createAppointment(@RequestBody AppointmentDTO appointment) {
-        var appointmentCreated = appointmentService.createAppointment(appointment);
-        rabbitTemplate.convertAndSend("appointmentsQueue", appointmentCreated);
-        return appointmentCreated;
+    public AppointmentOutputDTO createAppointment(@RequestBody @Valid AppointmentInputDTO appointment) {
+        return appointmentService.createAppointment(appointment);
     }
 
+    @PreAuthorize("hasAnyRole('DOCTOR', 'NURSE')")
     @PutMapping("/{appointmentId}")
-    @PreAuthorize("hasAnyRole('DOCTOR', 'NURSE')")
-    public Appointment updateAppointment(@PathVariable("appointmentId") String appointmentId, @RequestBody AppointmentDTO appointment) {
-        var appointmentUpdated = appointmentService.updateAppointment(appointmentId, appointment);
-        rabbitTemplate.convertAndSend("appointmentsQueue", appointmentUpdated);
-        return appointmentUpdated;
+    public AppointmentOutputDTO updateAppointment(@PathVariable("appointmentId") String appointmentId, @RequestBody @Valid AppointmentInputDTO appointment) {
+        return appointmentService.updateAppointment(appointmentId, appointment);
     }
 
-    @DeleteMapping("/{appointmentId}")
     @PreAuthorize("hasAnyRole('DOCTOR', 'NURSE')")
+    @DeleteMapping("/{appointmentId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteAppointment(@PathVariable("appointmentId") String appointmentId) {
         appointmentService.deleteAppointment(appointmentId);
