@@ -11,10 +11,12 @@ import jakarta.persistence.Table;
 import lombok.Data;
 import org.hibernate.annotations.UuidGenerator;
 
+import java.io.Serializable;
+
 @Data
 @Entity
 @Table(name = "`user`")
-public class User {
+public class User implements Serializable {
 
     @Id
     @GeneratedValue

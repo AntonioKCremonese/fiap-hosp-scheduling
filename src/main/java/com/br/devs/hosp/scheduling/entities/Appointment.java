@@ -5,13 +5,14 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.UuidGenerator;
 
+import java.io.Serializable;
 import java.sql.Time;
 import java.time.LocalDateTime;
 
 @Data
 @Entity
 @Table(name = "`appointment`")
-public class Appointment {
+public class Appointment implements Serializable {
 
     @Id
     @GeneratedValue

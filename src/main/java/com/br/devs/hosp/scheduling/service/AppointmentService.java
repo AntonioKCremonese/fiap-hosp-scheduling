@@ -37,6 +37,21 @@ public class AppointmentService {
                 .toList();
     }
 
+    public List<Appointment> futureAppointmentsByUserId(String userId) {
+        var now = LocalDateTime.now();
+        var user = userService.getUserById(userId);
+        if (user.getUserType().equals(UserType.PATIENT)) {
+            return appointmentRepository.findAll().stream()
+                    .filter(appointment -> appointment.getPatient().getId().equals(userId))
+                    .filter(appointment -> appointment.getDateTimeAppointment().isAfter(now))
+                    .toList();
+        }
+        return appointmentRepository.findAll().stream()
+                .filter(appointment -> appointment.getDoctor().getId().equals(userId))
+                .filter(appointment -> appointment.getDateTimeAppointment().isAfter(now))
+                .toList();
+    }
+
     public Appointment createAppointment(AppointmentDTO appointment) {
         var patient = userService.findUserById(appointment.patientId());
         var doctor = userService.findUserById(appointment.doctorId());
